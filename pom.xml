@@ -1,10 +1,10 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>main</groupId>
-    <artifactId>maze</artifactId>
+    <groupId>vlb</groupId>
+    <artifactId>vlb</artifactId>
     <version>v0.1</version>
 
-    <name>MAZE</name>
+    <name>VolleyBoon</name>
 
     <dependencies>
         <dependency>
@@ -32,7 +32,7 @@
     <build>
         <directory>target</directory>
         <outputDirectory>target/classes</outputDirectory>
-        <finalName>maze</finalName>
+        <finalName>vlb</finalName>
         <sourceDirectory>src</sourceDirectory>
         <resources>
             <resource>
@@ -57,7 +57,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>main.java.MazeGame</mainClass>
+                            <mainClass>main.java.Game</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
