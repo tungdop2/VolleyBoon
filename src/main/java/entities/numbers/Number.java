@@ -36,8 +36,8 @@ public class Number extends Entity {
         return img;
     }
 
-    public Number(int xUnit, int yUnit) {
-        super(xUnit, yUnit, Sprite.number_0.getFxImage());
+    public Number(int x, int y) {
+        super(x, y, Sprite.number_0.getFxImage());
     }
 
     public void setImgg(int i) {

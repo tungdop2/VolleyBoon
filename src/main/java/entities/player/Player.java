@@ -1,116 +1,105 @@
 package main.java.entities.player;
 
-import javafx.scene.image.Image;
 import main.java.Game;
 import main.java.entities.Entity;
 import main.java.graphics.Sprite;
 
 import java.util.HashSet;
 
-import static java.lang.Integer.max;
-
 public class Player extends Entity {
     public int score = 0;
     String left;
     String right;
     String jump;
-    int vx = 0;
-    int vy = 0;
-    float dx = 0;
-    long start_jump;
-    public Player(int xUnit, int yUnit, String left, String right, String jump) {
-        super(xUnit, yUnit, Sprite.player.getFxImage());
+    float real_x;
+    float real_y;
+    float vx;
+    float vy;
+    float ax;
+    float ay = 1024 * (float) Sprite.SCALE;
+    float leftbound;
+    float rightbound;
+    float delta_time;
+    long pre_time;
+    HashSet<String> keys;
+
+    public Player(int x, int y, String left, String right, String jump, int leftbound, int rightbound) {
+        super(x, y, Sprite.player.getFxImage());
+        real_x = (float) x;
+        real_y = (float) y;
         this.left = left;
         this.right = right;
         this.jump = jump;
+        this.leftbound = (float) leftbound;
+        this.rightbound = (float) rightbound;
+        pre_time = System.currentTimeMillis();
     }
 
     @Override
     public void update() {
-//        System.out.println(x +  " " + y);
-        HashSet<String> keys = Game.getCurrentlyActiveKeys();
+        delta_time = (float) (System.currentTimeMillis() - pre_time) / 1000;
+        pre_time = System.currentTimeMillis();
+        keys = Game.getCurrentlyActiveKeys();
+        move_horizonal();
+        jump();
+        x = (int) real_x;
+        y = (int) real_y;
+    }
 
-        if (keys.contains(right)) {
-            if (dx >= 0) dx += 0.2;
-            else dx = 0;
-            vx = Sprite.SCALE;
+    public void left() {
+        if (real_x - (float) Sprite.SCALE * delta_time > leftbound) {
+            vx = -(float) Sprite.SCALE * 2;
+        } else {
+            vx = 0;
         }
+    }
+
+    public void right() {
+        if (real_x + (float) 10 * Sprite.SCALE < rightbound) {
+            vx = (float) Sprite.SCALE * 2;
+        } else {
+            vx = 0;
+        }
+    }
+
+    public void move_horizonal() {
+        vx = 0;
+        if (keys.contains(right)) {
+            right();
+        }
+
         if (keys.contains(left)) {
-            if (dx <= 0) dx -= 0.2;
-            else dx = 0;
-            vx = -Sprite.SCALE;
+            left();
         }
 
         if (keys.isEmpty() || (keys.contains(right) && keys.contains(left))) {
             vx = 0;
-            dx = 0;
-        }
-//        vx += (int) dx;
-
-        for(int i = 0; i < max(vx, 0 - vx); i ++)
-        {
-            if (vx > 0) {
-                right();
-            } else {
-                left();
-            }
         }
 
-        if (keys.contains(jump)) {
-            jump();
-        }
-
-        if (start_jump != 0) {
-            double t = (double) (System.currentTimeMillis() - start_jump) / 1000;
-            double s0 = 4.0 * (double) Sprite.SCALED_SIZE - (double) Sprite.SCALE;
-            double v0 = 64 * (double) Sprite.SCALE;
-            double a = 256 * (double) Sprite.SCALE;
-            double yy = s0 - v0 * t + a * t * t / 2;
-            if (yy <= s0) {
-                y = (int) yy;
-                vy = (int) (v0 - a*t);
-            }
-            else {
-                y = 4 * Sprite.SCALED_SIZE - Sprite.SCALE;
-                start_jump = 0;
-                vy = 0;
-            }
-        }
-    }
-
-
-    public void left() {
-        if (!(x - 1 == 4 * Sprite.SCALE)
-            && !(x - 1 == 3 * Sprite.SCALED_SIZE + 10 * Sprite.SCALE)) {
-            x --;
-        }
-        else {
-            vx = 0;
-            dx = 0;
-        }
-    }
-    public void right() {
-        if (!(x + 10 * Sprite.SCALE == 7 * Sprite.SCALED_SIZE - 5 * Sprite.SCALE)
-            && !(x + 10 * Sprite.SCALE == 4 * Sprite.SCALED_SIZE - 11 * Sprite.SCALE)) {
-            x ++;
-        }
-        else {
-            vx = 0;
-            dx = 0;
-        }
+        real_x += vx;
     }
 
     public void jump() {
-         if (y == 4 * Sprite.SCALED_SIZE - Sprite.SCALE && start_jump == 0) {
-             start_jump = System.currentTimeMillis();
-         }
+        if (keys.contains(jump)) {
+            if (y == 4 * Sprite.SCALED_SIZE - Sprite.SCALE) {
+                vy = 128 * (float) Sprite.SCALE;
+            }
+        }
+
+        real_y -= vy * delta_time - ay * delta_time * delta_time / 2;
+        if (real_y <= 4 * (float) Sprite.SCALED_SIZE - (float) Sprite.SCALE) {
+            vy -= ay * delta_time;
+        } else {
+            real_y = 4 * (float) Sprite.SCALED_SIZE - (float) Sprite.SCALE;
+            vy = 0;
+        }
     }
 
-    public int getVx() {
+    public float getVx() {
         return vx;
     }
 
-    public int getVy() {
+    public float getVy() {
         return vy;
     }
 }

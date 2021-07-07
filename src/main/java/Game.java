@@ -149,4 +149,5 @@ public class Game extends Application {
     public static Player2 getP2() {
         return p2;
     }
+
 }

@@ -5,8 +5,8 @@ import main.java.entities.Entity;
 import main.java.graphics.Sprite;
 
 public class MiddleWall extends Entity {
-    public MiddleWall(int xUnit, int yUnit) {
-        super(xUnit, yUnit, Sprite.wall_mid.getFxImage());
+    public MiddleWall(int x, int y) {
+        super(x, y, Sprite.wall_mid.getFxImage());
     }
 
     @Override

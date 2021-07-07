@@ -6,8 +6,8 @@ import main.java.graphics.Sprite;
 
 public class VerticalWall extends Entity {
 
-    public VerticalWall(int xUnit, int yUnit) {
-        super(xUnit, yUnit, Sprite.wall_ver.getFxImage());
+    public VerticalWall(int x, int y) {
+        super(x, y, Sprite.wall_ver.getFxImage());
     }
 
     @Override
